@@ -9,7 +9,7 @@ Assurez vous que vous pointez sur le répertoire src pour utiliser les images
 
 ## Guide du Développeur
 
-* Fanorona is written in Java. 
+#### Fanorona is written in Java. 
 - A Tree Game Search using the [Alpha-Beta](https://chessprogramming.wikispaces.com/Alpha-Beta) Pruning search implementing: 
     * a mini-max evaluation
     * a Transposition Table
@@ -18,7 +18,7 @@ Assurez vous que vous pointez sur le répertoire src pour utiliser les images
     * an alpha-beta enhancement called Principal Variation
     * a - Memory Test Driver reducing the calculation time. MTD(f)    
 
-* Its UI Component is an Applet and mostly uses AWT;
+#### Its UI Component is an Applet and mostly uses AWT;
 - A StackLayout is a LayoutManager that arranges components in a vertical (or horizontal)  
 - A [64 BitSet](docs/Fanorona%20Bits%20Explanation.xls?raw=true) allowing Data Representation and Manipulation of the board. 
 
