@@ -23,10 +23,8 @@ package logic.board
 object Bits {
 
   val IS_WHITE      = 0x4000000000000000L // 1L << 62
-  val CAPTURED      = 0x8000000000000000L // 1L << 63; sign
+  val CAPTURED      = 0x8000000000000000L // 1L << 63; sign bit speeds tests
 
-  // bit speeds
-  // tests
   // HEX Annotation
   val INITIAL_TOP   = 0x0001ff7fd4a00000L
   val INITIAL_BOT   = 0x000000000a57fdffL
@@ -36,7 +34,7 @@ object Bits {
   val RIGHT_COL     = 0x0000010040100401L
   val DIAGONAL      = 0x0001552a9552a955L
   val ON_BOARD      = 0x0001ff7fdff7fdffL
-  val CENTER        = 0x0000000007c00000L
+  val CENTER: Long  = 0x0000000007c00000L
 
   // turn screen coordinates into bit position
   def at(row: Int, col: Int): Long = 1L << (10 * (4 - row)) + (8 - col)
@@ -63,4 +61,15 @@ object Bits {
     val result = set.toInt + (set >>> 32).toInt
     (((result & FOURS) + ((result >>> 4) & FOURS)) * 0x01010101) >>> 24
   }
+}
+
+/*
+  Must be slow,
+  use only for debugging Board Representation
+ */
+class LongToBase( val digits:String ) extends AnyVal {
+  def base(b:Long) = java.lang.Long.parseLong( digits, 2)
+  def b = base(2)
+  def o = base(8)
+  def x = base(16)
 }

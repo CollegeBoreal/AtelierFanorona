@@ -19,7 +19,7 @@ public class RunBitBoardPosition {
 		}
 	}
 
-	public void testBits() {
+	public void displayBits() {
 	
 		long myPieces = Bits.INITIAL_BOT | Bits.IS_WHITE;
 		long opponentPieces = Bits.INITIAL_TOP;
@@ -71,10 +71,24 @@ public class RunBitBoardPosition {
 
     }
 
-	
-	public static void main(String [ ] args) {
+    public void testBits() {
+        long myPieces = Bits.INITIAL_BOT | Bits.IS_WHITE;
+        long opponentPieces = Bits.INITIAL_TOP;
+        System.out.println("myPieces: " + myPieces + " opponentPieces: " + opponentPieces);
+
+        int myPieceCount = Bits.count(myPieces);
+        int oppPieceCount = Bits.count(opponentPieces);
+
+        System.out.println("myPieces Count: " + myPieceCount + " opponentPieces Count: " + oppPieceCount);
+
+    }
+
+
+
+    public static void main(String [ ] args) {
 		
 		RunBitBoardPosition run = new RunBitBoardPosition();
+		run.displayBits();
 		run.testBits();
 		run.boardNumbers();
         run.octal2hex();
