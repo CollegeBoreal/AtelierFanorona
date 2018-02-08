@@ -22,25 +22,27 @@ package logic.board
 
 object Bits {
 
-  val IS_WHITE      = 0x4000000000000000L // 1L << 62
-  val CAPTURED      = 0x8000000000000000L // 1L << 63; sign bit speeds tests
+  type Board = Long
+
+  val IS_WHITE: Board      = 0x4000000000000000L // 1L << 62
+  val CAPTURED: Board      = 0x8000000000000000L // 1L << 63; sign bit speeds tests
 
   // HEX Annotation
-  val INITIAL_TOP   = 0x0001ff7fd4a00000L
-  val INITIAL_BOT   = 0x000000000a57fdffL
-  val TOP_ROW       = 0x0001ff0000000000L
-  val BOTTOM_ROW    = 0x00000000000001ffL
-  val LEFT_COL      = 0x0001004010040100L
-  val RIGHT_COL     = 0x0000010040100401L
-  val DIAGONAL      = 0x0001552a9552a955L
-  val ON_BOARD      = 0x0001ff7fdff7fdffL
-  val CENTER: Long  = 0x0000000007c00000L
+  val INITIAL_TOP: Board   = 0x0001ff7fd4a00000L
+  val INITIAL_BOT: Board   = 0x000000000a57fdffL
+  val TOP_ROW: Board       = 0x0001ff0000000000L
+  val BOTTOM_ROW: Board    = 0x00000000000001ffL
+  val LEFT_COL: Board      = 0x0001004010040100L
+  val RIGHT_COL: Board     = 0x0000010040100401L
+  val DIAGONAL: Board      = 0x0001552a9552a955L
+  val ON_BOARD: Board      = 0x0001ff7fdff7fdffL
+  val CENTER: Board        = 0x0000000007c00000L
 
   // turn screen coordinates into bit position
-  def at(row: Int, col: Int): Long = 1L << (10 * (4 - row)) + (8 - col)
+  def at(row: Int, col: Int): Board = 1L << (10 * (4 - row)) + (8 - col)
 
   // isolate one of the bits from a bitboard
-  def lastBit(bitBoard: Long): Long = bitBoard & -bitBoard
+  def lastBit(bitBoard: Long): Board = bitBoard & -bitBoard
 
   // how much to shift from coordinates
   val SHIFT_VERTICAL = 10

@@ -1,27 +1,69 @@
 package test
 
+import logic.board.Bits.Board
 import logic.board.{Bits, LongToBase}
+
+import scala.language.postfixOps
 
 
 object RunBitBoardPosition {
   def main(args: Array[String]): Unit = {
     val run = new RunBitBoardPosition
     run.testBits()
-    run.boardNumbers()
+    run.boardPosition()
     run.plainBits()
     run.manipulateBits()
+    run.boardLocalization()
   }
 }
 
 class RunBitBoardPosition {
   val Column = Array('a','b','c','d','e','f','g','h')
   val Row = Array('1','2','3','4','5')
-  def boardNumbers(): Unit = {
+
+  def boardPosition(): Unit = {
     println("-------------------------------------------------------")
     println("Displays Bit Positioning ")
-      for (row <- 0 to 4; col <- 0 to 7) yield {
-      println("Position[col,row](" + Column(col) +  "," + Row(row) + ") => " +Bits.at(row, col))
+    for (row <- 0 to 4; col <- 0 to 7) yield {
+      val pos: Board = Bits.at(row, col)
+      println("Position[col,row](" + Column(col) +  "," + Row(row) + ") => " + pos)
     }
+  }
+
+
+  def boardLocalization(): Unit = {
+      println("--- boardLocalization ----------------------------------------------------")
+
+    val s = '_' // byte separator
+
+    val a1_ ="00000001_00000000_00000000_00000000_00000000_00000000_00000000".filterNot(s==)
+    val a2_ ="00000000_10000000_00000000_00000000_00000000_00000000_00000000".filterNot(s==)
+
+    /* INITIAL_TOP
+        Capture	Color
+              ^ ^
+    Top Four	0	1	2	3  (4 specialized bits)
+              0 0 0 0
+
+    Groups	0	1	2	3	4	5	6	7	8	9
+    0	      0	0	0	0	0	0	0	0	0	0	Empty Group
+    1	      0	1	1	1	1	1	1	1	1	1
+    2	      0	1	1	1	1	1	1	1	1	1
+    3	      0	1	0	1	0	0	1	0	1	0
+    4	      0	0	0	0	0	0	0	0	0	0	Empty Group
+    5	      0	0	0	0	0	0	0	0	0	0	Empty Group
+        Empty First Column
+    */
+    val it_ ="00000001_11111111_01111111_11010100_10100000_00000000_00000000".filterNot(s==)
+
+    val a1: Board = new LongToBase(a1_).b
+    val a2: Board = new LongToBase(a2_).b
+    val it =   new LongToBase(it_).b
+    assert(a1 ==  Bits.at(0, 0))
+    assert(a2 ==  Bits.at(0, 1))
+    assert(it ==  Bits.INITIAL_TOP)
+
+
   }
 
   def displayBits(): Unit = {
