@@ -20,8 +20,6 @@ package logic.board
 // for various board configurations, used in game setup, move generation,
 // and evaluation.
 
-import scala.language.postfixOps
-
 object Bits {
 
   type Board = Long
@@ -65,42 +63,4 @@ object Bits {
     (((result & FOURS) + ((result >>> 4) & FOURS)) * 0x01010101) >>> 24
   }
 
-}
-
-object StringBits {
-
-  val S = '_' // byte separator
-
-  val IS_WHITE    ="01000000_00000000_00000000_00000000_00000000_00000000_00000000_00000000".filterNot(S==)
-  val CAPTURED    ="10000000_00000000_00000000_00000000_00000000_00000000_00000000_00000000".filterNot(S==)
-
-  /* INITIAL_TOP
-    Capture	Color
-          ^ ^
-  Top Four	0	1	2	3  (4 specialized bits)
-            0 0 0 0
-
-  Groups	0	1	2	3	4	5	6	7	8	9
-  0	      0	0	0	0	0	0	0	0	0	0	Empty Group
-  1	      0	1	1	1	1	1	1	1	1	1
-  2	      0	1	1	1	1	1	1	1	1	1
-  3	      0	1	0	1	0	0	1	0	1	0
-  4	      0	0	0	0	0	0	0	0	0	0	Empty Group
-  5	      0	0	0	0	0	0	0	0	0	0	Empty Group
-      Empty First Column
-  */
-  val INITIAL_TOP ="00000000_00000001_11111111_01111111_11010100_10100000_00000000_00000000".filterNot(S==)
-  //                    ^ Group 0  ^ _Group 1  ^ Group 2  ^ Group 3  ^ Group 4  ^ Group 5
-
-}
-
-/*
-  Must be slow,
-  use only for debugging Board Representation
- */
-class LongToBase( val digits:String ) extends AnyVal {
-  def base(b:Long) = java.lang.Long.parseLong( digits, 2)
-  def b = base(2)
-  def o = base(8)
-  def x = base(16)
 }

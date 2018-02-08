@@ -18,23 +18,28 @@ object RunBitBoardPosition {
 }
 
 class RunBitBoardPosition {
-//  val Column = Array('a','b','c','d','e','f','g','h')
-//  val Row = Array('1','2','3','4','5')
 
+  //  val Column = Array('a','b','c','d','e','f','g','h',i)
   object Column extends Enumeration {
-    val a,b,c,d,e,f,g,h = Value
+    val a,b,c,d,e,f,g,h,i = Value
   }
 
+  //  val Row = Array('1','2','3','4','5')
   object Row extends Enumeration {
     val I,II,III,IV,V = Value
   }
 
   def boardPosition(): Unit = {
     println("-------------------------------------------------------")
-    println("Displays Bit Positioning ")
-    for (row <- 0 to 4; col <- 0 to 7) yield {
-      val pos: Board = Bits.at(row, col)
-      println("Position[col,row](" + Column(col) +  "," + Row(row) + ") => " + pos)
+    println("Displays Bit Positioning")
+    println("=> a1 is at the bottom left corner of the board ")
+    println("=> i5 is at the top right corner of the board ")
+    for (r <- 0 to 4; c <- 0 to 8) yield {
+      val pos: Board = Bits.at(r, c)
+      val column = Column(c)
+      val row = Row(r).id + 1
+      val msg = "Position[col,row](%s,%d) => %d "
+      println(msg.format(column,row ,pos))
     }
   }
 
@@ -45,10 +50,13 @@ class RunBitBoardPosition {
 
     val aI_  ="00000001_00000000_00000000_00000000_00000000_00000000_00000000".filterNot(StringBits.S==)
     val aII_ ="00000000_10000000_00000000_00000000_00000000_00000000_00000000".filterNot(StringBits.S==)
+    val iIV_ ="00000000_00000000_00000000_00000000_00000000_00000000_00000010".filterNot(StringBits.S==)
+    val iV_  ="00000000_00000000_00000000_00000000_00000000_00000000_00000001".filterNot(StringBits.S==)
 
-    assert(new LongToBase(aI_).b ==  Bits.at(0, 0))
+    assert(new LongToBase(aI_ ).b ==  Bits.at(0, 0))
     assert(new LongToBase(aII_).b ==  Bits.at(0, 1))
-
+    assert(new LongToBase(iIV_).b ==  Bits.at(4, 7))
+    assert(new LongToBase(iV_ ).b ==  Bits.at(4, 8))
 
   }
 
@@ -83,10 +91,14 @@ class RunBitBoardPosition {
     println("-------------------------------------------------------")
 
     assert(new LongToBase(StringBits.IS_WHITE).b == Bits.IS_WHITE)
-    /* Sign bit throws a java.lang.NumberFormatException:
+    /*
+      TODO adjust with proper assertThrows assertion
+      Sign bit throws a java.lang.NumberFormatException:
     assert(new LongToBase(StringBits.CAPTURED).b == Bits.CAPTURED)
      */
     assert(new LongToBase(StringBits.INITIAL_TOP).b ==  Bits.INITIAL_TOP)
+    assert(new LongToBase(StringBits.INITIAL_BOT).b ==  Bits.INITIAL_BOT)
+    assert(new LongToBase(StringBits.TOP_ROW).b ==  Bits.TOP_ROW)
 
 
   }
