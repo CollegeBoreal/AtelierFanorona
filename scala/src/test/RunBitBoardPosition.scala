@@ -1,7 +1,7 @@
 package test
 
 import logic.board.Bits.Board
-import logic.board.{Bits, LongToBase}
+import logic.board.{Bits, LongToBase, StringBits}
 
 import scala.language.postfixOps
 
@@ -18,8 +18,16 @@ object RunBitBoardPosition {
 }
 
 class RunBitBoardPosition {
-  val Column = Array('a','b','c','d','e','f','g','h')
-  val Row = Array('1','2','3','4','5')
+//  val Column = Array('a','b','c','d','e','f','g','h')
+//  val Row = Array('1','2','3','4','5')
+
+  object Column extends Enumeration {
+    val a,b,c,d,e,f,g,h = Value
+  }
+
+  object Row extends Enumeration {
+    val I,II,III,IV,V = Value
+  }
 
   def boardPosition(): Unit = {
     println("-------------------------------------------------------")
@@ -34,34 +42,12 @@ class RunBitBoardPosition {
   def boardLocalization(): Unit = {
       println("--- boardLocalization ----------------------------------------------------")
 
-    val s = '_' // byte separator
 
-    val a1_ ="00000001_00000000_00000000_00000000_00000000_00000000_00000000".filterNot(s==)
-    val a2_ ="00000000_10000000_00000000_00000000_00000000_00000000_00000000".filterNot(s==)
+    val aI_  ="00000001_00000000_00000000_00000000_00000000_00000000_00000000".filterNot(StringBits.S==)
+    val aII_ ="00000000_10000000_00000000_00000000_00000000_00000000_00000000".filterNot(StringBits.S==)
 
-    /* INITIAL_TOP
-        Capture	Color
-              ^ ^
-    Top Four	0	1	2	3  (4 specialized bits)
-              0 0 0 0
-
-    Groups	0	1	2	3	4	5	6	7	8	9
-    0	      0	0	0	0	0	0	0	0	0	0	Empty Group
-    1	      0	1	1	1	1	1	1	1	1	1
-    2	      0	1	1	1	1	1	1	1	1	1
-    3	      0	1	0	1	0	0	1	0	1	0
-    4	      0	0	0	0	0	0	0	0	0	0	Empty Group
-    5	      0	0	0	0	0	0	0	0	0	0	Empty Group
-        Empty First Column
-    */
-    val it_ ="00000001_11111111_01111111_11010100_10100000_00000000_00000000".filterNot(s==)
-
-    val a1: Board = new LongToBase(a1_).b
-    val a2: Board = new LongToBase(a2_).b
-    val it =   new LongToBase(it_).b
-    assert(a1 ==  Bits.at(0, 0))
-    assert(a2 ==  Bits.at(0, 1))
-    assert(it ==  Bits.INITIAL_TOP)
+    assert(new LongToBase(aI_).b ==  Bits.at(0, 0))
+    assert(new LongToBase(aII_).b ==  Bits.at(0, 1))
 
 
   }
@@ -96,13 +82,12 @@ class RunBitBoardPosition {
   def plainBits(): Unit = {
     println("-------------------------------------------------------")
 
-    val white = new LongToBase("0100000000000000000000000000000000000000000000000000000000000000").b
-    assert(white == Bits.IS_WHITE)
-
+    assert(new LongToBase(StringBits.IS_WHITE).b == Bits.IS_WHITE)
     /* Sign bit throws a java.lang.NumberFormatException:
-    val captured = new LongToBase("1000000000000000000000000000000000000000000000000000000000000000").b
-    assert(captured == Bits.CAPTURED)
-    */
+    assert(new LongToBase(StringBits.CAPTURED).b == Bits.CAPTURED)
+     */
+    assert(new LongToBase(StringBits.INITIAL_TOP).b ==  Bits.INITIAL_TOP)
+
 
   }
 

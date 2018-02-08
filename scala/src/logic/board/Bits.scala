@@ -20,14 +20,17 @@ package logic.board
 // for various board configurations, used in game setup, move generation,
 // and evaluation.
 
+import scala.language.postfixOps
+
 object Bits {
 
   type Board = Long
 
+  // HEX Annotation
+
   val IS_WHITE: Board      = 0x4000000000000000L // 1L << 62
   val CAPTURED: Board      = 0x8000000000000000L // 1L << 63; sign bit speeds tests
 
-  // HEX Annotation
   val INITIAL_TOP: Board   = 0x0001ff7fd4a00000L
   val INITIAL_BOT: Board   = 0x000000000a57fdffL
   val TOP_ROW: Board       = 0x0001ff0000000000L
@@ -38,31 +41,57 @@ object Bits {
   val ON_BOARD: Board      = 0x0001ff7fdff7fdffL
   val CENTER: Board        = 0x0000000007c00000L
 
-  // turn screen coordinates into bit position
-  def at(row: Int, col: Int): Board = 1L << (10 * (4 - row)) + (8 - col)
-
-  // isolate one of the bits from a bitboard
-  def lastBit(bitBoard: Long): Board = bitBoard & -bitBoard
-
   // how much to shift from coordinates
   val SHIFT_VERTICAL = 10
   val SHIFT_HORIZONTAL = 1
   val SHIFT_SLANT = 11
   val SHIFT_BACKSLANT = 9
 
-  // count number of set bits in a word
-  private[board] val ONES   = 0x5555555555555555L // A series of 0101 0101 0101 on all 64 bits
-  private[board] val TWOS   = 0x3333333333333333L // A series of 0011 0011 0011 on all 64 bits
-  private[board] val FOURS  = 0x0f0f0f0f // A series 0f 0000 1111 0000 1111 on only last 32 bits
+  // turn screen coordinates into bit position
+  def at(row: Int, col: Int): Board = 1L << (10 * (4 - row)) + (8 - col)
 
-  def count(set$: Long): Int = {
-    // TODO Just not functional
-    var set = set$
-    set -= (set >>> 1) & ONES
-    set = (set & TWOS) + ((set >>> 2) & TWOS)
-    val result = set.toInt + (set >>> 32).toInt
+  // isolate one of the bits from a bitboard
+  def lastBit(bitBoard: Long): Board = bitBoard & -bitBoard
+
+  def count(board: Board): Int = {
+    // count number of set bits in a word
+    val ONES   = 0x5555555555555555L // A series of 0101 0101 0101 on all 64 bits
+    val TWOS   = 0x3333333333333333L // A series of 0011 0011 0011 on all 64 bits
+    val FOURS  = 0x0f0f0f0f // A series 0f 0000 1111 0000 1111 on only last 32 bits
+
+    val ones = board - ((board >>> 1) & ONES)  /// Shift Capture and filter ONES
+    val twos = (ones & TWOS) + ((ones >>> 2) & TWOS)  // Shift Color and filter TWOS
+    val result = twos.toInt + (twos >>> 32).toInt
     (((result & FOURS) + ((result >>> 4) & FOURS)) * 0x01010101) >>> 24
   }
+
+}
+
+object StringBits {
+
+  val S = '_' // byte separator
+
+  val IS_WHITE    ="01000000_00000000_00000000_00000000_00000000_00000000_00000000_00000000".filterNot(S==)
+  val CAPTURED    ="10000000_00000000_00000000_00000000_00000000_00000000_00000000_00000000".filterNot(S==)
+
+  /* INITIAL_TOP
+    Capture	Color
+          ^ ^
+  Top Four	0	1	2	3  (4 specialized bits)
+            0 0 0 0
+
+  Groups	0	1	2	3	4	5	6	7	8	9
+  0	      0	0	0	0	0	0	0	0	0	0	Empty Group
+  1	      0	1	1	1	1	1	1	1	1	1
+  2	      0	1	1	1	1	1	1	1	1	1
+  3	      0	1	0	1	0	0	1	0	1	0
+  4	      0	0	0	0	0	0	0	0	0	0	Empty Group
+  5	      0	0	0	0	0	0	0	0	0	0	Empty Group
+      Empty First Column
+  */
+  val INITIAL_TOP ="00000000_00000001_11111111_01111111_11010100_10100000_00000000_00000000".filterNot(S==)
+  //                    ^ Group 0  ^ _Group 1  ^ Group 2  ^ Group 3  ^ Group 4  ^ Group 5
+
 }
 
 /*
